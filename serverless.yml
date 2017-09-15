@@ -6,18 +6,20 @@ provider:
 
 plugins:
   - serverless-offline
-
-package:
-  include:
-    - handler.js
-    - util/**
-    - config/**
+  - serverless-plugin-warmup
 
 functions:
   send:
-    handler: handler.email
+    handler: dist/handler.email
+    warmup: true
     events:
       - http:
           path: email
           method: post
           cors: true
+
+iamRoleStatements:
+  - Effect: 'Allow'
+    Action:
+      - 'lambda:InvokeFunction'
+    Resource: "*"

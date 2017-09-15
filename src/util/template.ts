@@ -100,8 +100,7 @@ const style = `
 `.trim();
 
 export function template(body: any): string {
-  const message = body.message.split(/\n/)
-    .map(message => `<p>${message}</p>`);
+  const message = body.message.split(/\n/).map(message => `<p>${message}</p>`);
   return `
     <html>
       <head>

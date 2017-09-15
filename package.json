@@ -3,29 +3,39 @@
   "description": "send an e-mail through AWS Lamda",
   "version": "1.0.0",
   "license": "MIT",
-  "author": "Dustin Schau <dustinschau@gmail.com>",
+  "author": "Dustin Schau <dustinschau@gmail.com> (https://dustinschau.com)",
   "repository": {
     "type": "git",
     "url": "https://github.com/DSchau/email-handler.git"
   },
   "scripts": {
-    "prebuild": "del-cli \"handler.js\" \"util/**/*\"",
+    "precommit": "lint-staged",
+    "prebuild": "del-cli \"dist/**/*\"",
     "build": "tsc",
-    "deploy": "cross-env NODE_ENV=production npm run serverless:deploy -- --stage production",
-    "deploy:dev": "cross-env NODE_ENV=development npm run serverless:deploy",
+    "format": "prettier \"src/**/*.ts\" --parser typescript --single-quote --write ",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=development serverless offline --location .",
-    "preserverless:deploy": "npm run build",
-    "serverless:deploy": "serverless deploy -v"
+    "test": "echo \"Should write tests, huh\""
   },
   "dependencies": {
-    "config": "~1.26.1",
-    "cssnano": "~3.10.0",
     "nodemailer": "~4.0.1"
   },
   "devDependencies": {
+    "@types/node": "^8.0.28",
+    "@types/nodemailer": "^3.1.3",
     "cross-env": "~5.0.0",
     "del-cli": "~1.0.0",
-    "serverless-offline": "~3.14.0"
+    "husky": "^0.14.3",
+    "lint-staged": "^4.1.3",
+    "prettier": "^1.7.0",
+    "serverless-offline": "~3.14.0",
+    "serverless-plugin-warmup": "^3.1.0-rc.1",
+    "typescript": "^2.5.2"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "npm run format",
+      "git add"
+    ]
   }
 }
