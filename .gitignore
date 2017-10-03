@@ -13,3 +13,7 @@ util/
 # secure files
 config/development.json
 config/production.json
+
+# built files
+dist
+

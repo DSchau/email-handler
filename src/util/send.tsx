@@ -1,7 +1,11 @@
+import * as React from 'react';
+import { renderToString } from 'react-dom/server';
 import * as nodeMailer from 'nodemailer';
 
 import { toJson } from './to-json';
-import { template as html } from './template';
+import { EmailTemplate } from './email-template';
+import { inky } from './inky';
+import { htmlTemplate } from './html-template';
 import { validator } from './validator';
 
 export function send(body: string): Promise<nodeMailer.SentMessageInfo> {
@@ -27,7 +31,9 @@ export function send(body: string): Promise<nodeMailer.SentMessageInfo> {
       from: `"${data.name}" <${data.email || 'dustinschau@gmail.com'}>`,
       to: 'dustinschau+website@gmail.com',
       subject: data.subject || 'Hello from dustinschau.com',
-      html: html(data)
+      html: htmlTemplate`
+${renderToString(<EmailTemplate {...data} />)}
+      `
     };
 
     transporter.sendMail(options, (error, info) => {

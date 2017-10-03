@@ -18,7 +18,11 @@
     "test": "echo \"Should write tests, huh\""
   },
   "dependencies": {
-    "nodemailer": "~4.0.1"
+    "inky": "~1.3.7",
+    "inline-css": "~2.2.2",
+    "nodemailer": "~4.0.1",
+    "react": "~16.0.0",
+    "react-dom": "~16.0.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.28",
