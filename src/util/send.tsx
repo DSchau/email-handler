@@ -8,7 +8,7 @@ import { inky } from './inky';
 import { htmlTemplate } from './html-template';
 import { validator } from './validator';
 
-export function send(body: string): Promise<nodeMailer.SentMessageInfo> {
+export async function send(body: string): Promise<nodeMailer.SentMessageInfo> {
   const data = toJson(body);
   const required = ['name', 'message'];
   const valid = validator(data, required);
@@ -18,29 +18,28 @@ export function send(body: string): Promise<nodeMailer.SentMessageInfo> {
     );
   }
 
-  return new Promise((resolve, reject) => {
-    const transporter = nodeMailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'dustinschau+website@gmail.com',
-        pass: process.env['GMAIL_PASSWORD']
-      }
-    });
+  const transporter = nodeMailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'dustinschau+website@gmail.com',
+      pass: process.env['GMAIL_PASSWORD']
+    }
+  });
 
-    const options = {
-      from: `"${data.name}" <${data.email || 'dustinschau@gmail.com'}>`,
-      to: 'dustinschau+website@gmail.com',
-      subject: data.subject || 'Hello from dustinschau.com',
-      html: htmlTemplate`
-${renderToString(<EmailTemplate {...data} />)}
-      `
-    };
+  const html = await htmlTemplate(renderToString(<EmailTemplate {...data}/>));
+  const options = {
+    from: `"${data.name}" <${data.email || 'dustinschau@gmail.com'}>`,
+    to: 'dustinschau+website@gmail.com',
+    subject: data.subject || 'Hello from dustinschau.com',
+    html
+  };
 
-    transporter.sendMail(options, (error, info) => {
-      if (error) {
-        return reject(error);
+  return await new Promise((resolve, reject) => {
+    transporter.sendMail(options, (err, info) => {
+      if (err) {
+        reject(err);
       }
       resolve(info);
     });
-  });
+  }) as nodeMailer.SentMessageInfo;
 }
