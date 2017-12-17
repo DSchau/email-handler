@@ -7,8 +7,15 @@ import { inky } from './inky';
 import { htmlTemplate } from './html-template';
 import { validator } from './validator';
 
+interface Body {
+  name: string;
+  message: string;
+  email?: string;
+  subject?: string;
+}
+
 export async function send(body: string): Promise<nodeMailer.SentMessageInfo> {
-  const data = toJson(body);
+  const data: Body = toJson(body);
   const required = ['name', 'message'];
   const valid = validator(data, required);
   if (!valid) {
