@@ -14,7 +14,10 @@ export async function email(ev, context, callback) {
     const response = await send(ev.body).catch(e => callback(e));
 
     return callback(null, {
-      statusCode: 301,
+      statusCode:
+        ev.headers.ContentType === 'application/x-www-form-urlencoded'
+          ? 301
+          : 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
         Location: `${referer}?success=true`
