@@ -13,10 +13,6 @@ export async function email(ev, context, callback) {
   try {
     const response = await send(ev.body).catch(e => callback(e));
 
-    context.succeed({
-      location: `${referer}?success=true`
-    });
-
     return callback(null, {
       statusCode: 200,
       headers: {
@@ -26,9 +22,6 @@ export async function email(ev, context, callback) {
     });
   } catch (e) {
     console.error(e);
-    context.fail({
-      location: `${referer}?success=false`
-    });
     return callback(e);
   }
 }
