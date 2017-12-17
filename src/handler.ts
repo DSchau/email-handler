@@ -16,7 +16,8 @@ export async function email(ev, context, callback) {
     return callback(null, {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        Location: `${referer}?success=true`
       },
       body: JSON.stringify(response)
     });
