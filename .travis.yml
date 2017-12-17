@@ -4,12 +4,14 @@ node_js:
 cache:
   yarn: true
 
+before_install:
+  - export PATH=$PATH:`yarn global bin` # temporary until TravisCI fixes issue
+  - yarn global add serverless
+install: yarn
+
 script: yarn test
 
-before_deploy:
-  - export PATH=$PATH:`yarn global bin` # temporary until TravisCI fixes issue
-  - yarn build
-  - yarn global add serverless
+before_deploy: yarn build
 deploy:
   provider: script
   script: serverless deploy --stage production
