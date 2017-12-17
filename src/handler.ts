@@ -15,7 +15,7 @@ export async function email(ev, context, callback) {
 
     return callback(null, {
       statusCode:
-        ev.headers.ContentType === 'application/x-www-form-urlencoded'
+        ev.headers['Content-Type'] === 'application/x-www-form-urlencoded'
           ? 301
           : 200,
       headers: {
