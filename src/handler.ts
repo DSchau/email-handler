@@ -8,6 +8,9 @@ export async function email(ev, context, callback) {
     return callback(null, 'Lambda is warm!');
   }
 
+  console.log(JSON.stringify(ev));
+  console.log(JSON.stringify(context));
+
   const referer = ev.headers.Referer.replace(/\/$/, '');
 
   try {
