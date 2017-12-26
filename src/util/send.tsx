@@ -12,6 +12,7 @@ interface Body {
   message: string;
   email?: string;
   subject?: string;
+  __spam_filter__?: string;
 }
 
 export async function send(body: string): Promise<nodeMailer.SentMessageInfo> {
@@ -22,6 +23,8 @@ export async function send(body: string): Promise<nodeMailer.SentMessageInfo> {
     return Promise.reject(
       new Error('[Data Validation]: Required fields not present')
     );
+  } else if (data.__spam_filter__) {
+    return Promise.reject(new Error('[Spam filter]: This form field should not be filled out'));
   }
 
   const transporter = nodeMailer.createTransport({
