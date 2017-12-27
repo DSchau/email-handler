@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@dschau/email-template": "~1.1.2",
+    "email-validator": "~1.1.1",
     "foundation-emails": "~2.2.1",
     "glamor": "~2.20.40",
     "he": "~1.1.1",
