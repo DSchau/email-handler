@@ -12,7 +12,7 @@
     "precommit": "lint-staged",
     "prebuild": "del-cli \"dist/**/*\"",
     "build": "tsc",
-    "format": "prettier \"src/**/*.{ts,tsx}\" --parser typescript --single-quote --write",
+    "format": "prettier \"src/**/*.ts\" --write",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=development serverless offline --location .",
     "test": "jest"

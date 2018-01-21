@@ -1,31 +1,43 @@
 import { send } from './util/send';
 
-const isWarmUp = ev => ev.source === 'serverless-plugin-warmup';
+const handleCallback = (callback, ev) => {
+  const referer = ev.headers.Referer.replace(/\/$/, '');
+  let statusCode =
+    ev.headers['content-type'] === 'application/x-www-form-urlencoded'
+      ? 302
+      : 200;
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    Location: `${referer}?success=true`
+  };
+
+  return function(err: null | Error, body?: string | Error) {
+    if (err) {
+      body = JSON.stringify({
+        error: err.toString()
+      });
+      statusCode = 500;
+    }
+    return callback(null, {
+      statusCode,
+      headers,
+      body
+    });
+  };
+};
 
 export async function email(ev, context, callback) {
-  if (isWarmUp(ev)) {
-    console.log('WarmUP - Lambda is warm!');
+  if (ev.source === 'serverless-plugin-warmup') {
     return callback(null, 'Lambda is warm!');
   }
 
-  const referer = ev.headers.Referer.replace(/\/$/, '');
-
   try {
-    const response = await send(ev.body).catch(e => callback(e));
+    console.log(ev.body);
+    const response = await send(ev.body);
 
-    return callback(null, {
-      statusCode:
-        ev.headers['content-type'] === 'application/x-www-form-urlencoded'
-          ? 302
-          : 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        Location: `${referer}?success=true`
-      },
-      body: JSON.stringify(response)
-    });
-  } catch (e) {
-    console.error(e);
-    return callback(e);
+    return handleCallback(callback, ev)(null, JSON.stringify(response));
+  } catch (err) {
+    console.error(err);
+    return handleCallback(callback, ev)(err);
   }
 }

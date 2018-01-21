@@ -11,7 +11,7 @@ plugins:
 functions:
   send:
     handler: dist/handler.email
-    warmup: true
+    warmup: production
     events:
       - http:
           path: email
