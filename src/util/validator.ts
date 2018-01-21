@@ -1,10 +1,12 @@
-import { validate as validEmail } from 'email-validator';
+import * as yup from 'yup';
 
-export function validator(obj: any, fields: string[]): boolean {
-  const keys = Object.keys(obj || {});
-  const existing = []
-    .concat(fields)
-    .filter(field => keys.indexOf(field) === -1);
-
-  return existing.length === 0 && validEmail(obj.email);
-}
+export const validator = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required(),
+  message: yup.string().required(),
+  name: yup.string().required(),
+  subject: yup.string(),
+  missHoney: yup.string().max(0)
+});
