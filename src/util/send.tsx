@@ -7,25 +7,12 @@ import { inky } from './inky';
 import { htmlTemplate } from './html-template';
 import { validator } from './validator';
 
-interface Body {
-  name: string;
-  message: string;
-  email?: string;
-  subject?: string;
-  __spam_filter__?: string;
-}
+import { EmailBody } from '../interfaces';
 
 export async function send(body: string): Promise<nodeMailer.SentMessageInfo> {
-  const data: Body = toJson(body);
-  const required = ['name', 'message'];
-  const valid = validator(data, required);
-  if (!valid) {
-    return Promise.reject(
-      new Error('[Data Validation]: Required fields not present')
-    );
-  } else if (data.__spam_filter__) {
-    return Promise.reject(new Error('[Spam filter]: This form field should not be filled out'));
-  }
+  const data: EmailBody = toJson(body);
+  
+  await validator.validate(data);
 
   const transporter = nodeMailer.createTransport({
     service: 'gmail',
